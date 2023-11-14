@@ -82,7 +82,7 @@ router.get("/search/:name", async (req, res) => {
 //MAS DE 20
 router.get("/products/optimum", async (req, res) => {
   try {
-    const products = await Product.find({ quantity: { $gt: 20 } });
+    const products = await Product.find({ quality: { $gt: 3 } });
     return res.status(200).json(products);
   } catch (error) {
     return res.status(404).json("Products not found");
