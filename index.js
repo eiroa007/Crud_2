@@ -5,8 +5,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 const connect = require("./utils/db");
-const Product = require("./models/product.model");
-const Stock = require("./models/stock.model");
+const Model = require("./models/modelo.model");
+const Usar = require("./models/usar.model");
 
 //Server
 const server = express();
@@ -20,81 +20,79 @@ connect();
 const router = express.Router();
 
 //Routes
-router.get("/products", async (req, res) => {
+router.get("/model", async (req, res) => {
   try {
-    const products = await Product.find();
-    return res.status(200).json(products);
+    const model = await Model.find();
+    return res.status(200).json(model);
   } catch (error) {
-    return res.status(404).json("Products not found", error);
+    return res.status(404).json("Model not found", error);
   }
 });
 
-router.get("/stock", async (req, res) => {
+router.get("/usar", async (req, res) => {
   try {
     //Con populate, populamos la propiedad products para que transforme los id's de productos en los productos enteros
-    const stock = await Stock.find().populate("products");
-    return res.status(200).json(stock);
+    const usar = await Usar.find().populate("model");
+    return res.status(200).json(usar);
   } catch (error) {
-    return res.status(404).json("Stock not found", error);
+    return res.status(404).json("Usar not found", error);
   }
 });
 
-router.post("/products", async (req, res) => {
+router.post("/model", async (req, res) => {
   try {
-    const newProduct = new Product(req.body);
-    await newProduct.save();
-    return res.status(201).json(newProduct);
+    const newModel = new Model(req.body);
+    await newModel.save();
+    return res.status(201).json(newModel);
   } catch (error) {
-    return res.status(500).json("Failed creating product", error);
+    return res.status(500).json("Failed creating model", error);
   }
 });
 
-router.post("/stock", async (req, res) => {
+router.post("/usar", async (req, res) => {
   try {
-    const newStock = new Stock(req.body);
-    await newStock.save();
-    return res.status(201).json(newStock);
+    const newUsar = new Usar(req.body);
+    await newUsar.save();
+    return res.status(201).json(newUsar);
   } catch (error) {
-    return res.status(500).json("Failed creating stock", error);
+    return res.status(500).json("Failed creating usar", error);
   }
 });
 //FIND BY NAME
 router.get("/videogames", async (req, res) => {
   try {
-    const stock = await Stock.findOne({ name: "Videojuegos" }).populate(
-      "products"
-    );
-    return res.status(200).json(stock);
+    const usar = await Usar.findOne({ name: "Videojuegos" }).populate("model");
+    return res.status(200).json(usar);
   } catch (error) {
-    return res.status(404).json("Stock not found", error);
+    return res.status(404).json("Usar not found", error);
   }
 });
 //FIND BY NAME QUERY
 router.get("/search/:name", async (req, res) => {
   try {
     const { name } = req.params;
-    const stock = await Stock.findOne({ name: name }).populate("products");
-    return res.status(200).json(stock);
+    const usar = await Usar.findOne({ name: name }).populate("model");
+    return res.status(200).json(usar);
   } catch (error) {
-    return res.status(404).json("Stock not found", error);
+    return res.status(404).json("Usar not found", error);
   }
 });
 //MAS DE 20
-router.get("/products/optimum", async (req, res) => {
+router.get("/model/optimum", async (req, res) => {
   try {
-    const products = await Product.find({ quality: { $gt: 3 } });
-    return res.status(200).json(products);
+    const model = await Model.find({ quality: { $gt: 3 } });
+    return res.status(200).json(model);
   } catch (error) {
-    return res.status(404).json("Products not found");
+    return res.status(404).json("Model not found");
   }
 });
 //ORDENADO POR CALIDAD
-router.get("/products/ordered", async (req, res) => {
+router.get("/model/ordered", async (req, res) => {
   try {
-    const products = await Product.find().sort({ quality: -1 });
-    return res.status(200).json(products);
+    const model = await Model.find().sort({ quality: -1 });
+    return res.status(200).json(model);
   } catch (error) {
-    return res.status(404).json("Products not found");
+    return res.status(404).json("Model not found");
   }
 });
 
